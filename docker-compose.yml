@@ -3,4 +3,4 @@ services:
     image: redis:7
     container_name: mini-book-notes-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"

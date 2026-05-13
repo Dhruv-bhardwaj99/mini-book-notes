@@ -1,12 +1,28 @@
+const { redisClient } = require("../config/redisClient");
 let books = [];
 
 const resolvers = {
   Query: {
-    books: () => books,
+    books: async () => {
+      const cachedBooks = await redisClient.get("books");
+
+      if(cachedBooks){
+        console.log("Books served from Redis cache");
+        return JSON.parse(cachedBooks);
+      }
+
+      console.log("Books served from memory");
+
+      await redisClient.set("books", JSON.stringify(books), {
+        EX: 60,
+      });
+
+      return books;
+    },
   },
 
   Mutation: {
-    addBook: (_, { title, author, notes }) => {
+    addBook: async(_, { title, author, notes }) => {
       const newBook = {
         id: String(books.length + 1),
         title,
@@ -15,6 +31,8 @@ const resolvers = {
       };
 
       books.push(newBook);
+
+      await redisClient.del("books");
       return newBook;
     },
   },

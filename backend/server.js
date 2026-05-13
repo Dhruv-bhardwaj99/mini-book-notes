@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const {ApolloServer} = require("@apollo/server");
+const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@as-integrations/express4");
+const { connectRedis } = require("./config/redisClient");
 require("dotenv").config();
 
 const typeDefs = require("./schema/typeDefs");
@@ -13,21 +14,22 @@ app.use(cors());
 app.use(express.json());
 
 async function startServer() {
-    const server = new ApolloServer({
-        typeDefs,
-        resolvers
-    });
+  await connectRedis();
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
 
-    await server.start();
+  await server.start();
 
-    app.use("/graphql", expressMiddleware(server));
+  app.use("/graphql", expressMiddleware(server));
 
-    const PORT = process.env.PORT || 4000;
+  const PORT = process.env.PORT || 4000;
 
-    app.listen(PORT, () =>{
-        console.log(`Backend running on http://localhost:${PORT}`);
-        console.log(`GraphQL running on http://localhost:${PORT}/graphql`);
-    });
+  app.listen(PORT, () => {
+    console.log(`Backend running on http://localhost:${PORT}`);
+    console.log(`GraphQL running on http://localhost:${PORT}/graphql`);
+  });
 }
 
 startServer();
