@@ -3,7 +3,7 @@ const cors = require("cors");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@as-integrations/express4");
 const { connectRedis } = require("./config/redisClient");
-
+const verifyFirebaseToken = require("./middleware/authMiddleware");
 
 require("dotenv").config();
 
@@ -24,7 +24,17 @@ async function startServer() {
 
   await server.start();
 
-  app.use("/graphql", expressMiddleware(server));
+  app.use(verifyFirebaseToken);
+
+  
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: async ({ req }) => ({
+        user: req.user,
+      }),
+    }),
+  );
 
   const PORT = process.env.PORT || 4000;
 
