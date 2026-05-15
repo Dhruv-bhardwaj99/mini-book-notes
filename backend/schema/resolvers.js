@@ -22,7 +22,11 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async(_, { title, author, notes }) => {
+    addBook: async(_, { title, author, notes }, context) => {
+
+      if(!context.user){
+        throw new Error("You must be logged in to add books")
+      }
       const newBook = {
         id: String(books.length + 1),
         title,
