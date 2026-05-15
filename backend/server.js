@@ -3,6 +3,8 @@ const cors = require("cors");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@as-integrations/express4");
 const { connectRedis } = require("./config/redisClient");
+
+
 require("dotenv").config();
 
 const typeDefs = require("./schema/typeDefs");
