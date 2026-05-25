@@ -48,7 +48,13 @@ const App = () => {
       ) : (
         <Login setUser={setUser} />
       )}
-      <AddBookForm />
+
+      {user ? (
+        <AddBookForm />
+
+      ) : (
+        <p>Please login to add books.</p>
+      )}
 
       <BookList />
     </div>
