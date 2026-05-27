@@ -27,41 +27,56 @@ const AddBookForm = () => {
     setNotes("");
   };
   return (
-    <div>
-      <h2>Add Book</h2>
-      {error && <p>Error: {error.message}</p>}
+    <div className="card mb-4">
+      <div className="card-body">
+        <h2 className="card-title mb-3">Add Book</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="">Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </div>
+        {error && (
+          <div className="alert alert-danger">Error: {error.message}</div>
+        )}
 
-        <div>
-          <label htmlFor="">Author</label>
-          <input
-            type="text"
-            value={author}
-            onChange={(event) => setAuthor(event.target.value)}
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="">
+              Title
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+          </div>
 
-        <div>
-          <label htmlFor="">Notes</label>
-          <textarea
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-          />
-        </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="">
+              Author
+            </label>
+            <input
+              className="form-control"
+              type="text"
+              value={author}
+              onChange={(event) => setAuthor(event.target.value)}
+            />
+          </div>
 
-        <button type="submit" disabled={loading}>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="Notes">
+              Notes
+            </label>
+            <textarea
+              className="form-control"
+              rows="4"
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+            />
+          </div>
+
+          <button className="btn btn-success" type="submit" disabled={loading}>
             {loading ? "Adding..." : "Add Book"}
-        </button>
-      </form>
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

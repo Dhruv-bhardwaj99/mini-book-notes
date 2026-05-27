@@ -31,31 +31,40 @@ const Login = ({ setUser }) => {
     }
   };
   return (
-    <div>
-      <h2>Login</h2>
-      {message && <p>{message}</p>}
+    <div className="card mb-4">
+      <div className="card-body">
+        <h2 className="card-title mb-3">Login</h2>
+        {message && <p>{message}</p>}
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="Email">
+              Email
+            </label>
+            <input
+              className="form-control"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
 
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="Email">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="password">
+              Password
+            </label>
+            <input
+              className="form-control"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-
-        <button type="submit">Login</button>
-      </form>
+          <button className="btn btn-primary" type="submit">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
