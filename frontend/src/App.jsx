@@ -37,13 +37,21 @@ const App = () => {
     return <p>Checking authentication...</p>;
   }
   return (
-    <div>
-      <h1>Mini Book Notes</h1>
+    <div className="container py-4">
+      <div className="mb-4">
+        <h1 className="text-primary">Mini Book Notes</h1>
+        <p className="text-muted">Save and manage your book notes.</p>
+      </div>
 
       {user ? (
-        <div>
-          <p>Logged in as: {user.email}</p>
-          <button onClick={handleLogout}>Logout</button>
+        <div className="alert alert-success d-flex justify-content-between align-items-center">
+          <span>Logged in as: {user.email}</span>
+          <button
+            className="btn btn-outline-danger btn-sm"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       ) : (
         <Login setUser={setUser} />
@@ -51,9 +59,8 @@ const App = () => {
 
       {user ? (
         <AddBookForm />
-
       ) : (
-        <p>Please login to add books.</p>
+        <div className="alert alert-warning">Please login to add books.</div>
       )}
 
       <BookList />

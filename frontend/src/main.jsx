@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { ApolloProvider } from "@apollo/client/react";
 import client from "./config/apolloClient.js";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
