@@ -1,10 +1,11 @@
 import { useState } from "react";
-import AddBookForm from "./components/AddBookForm";
-import BookList from "./components/BookList";
-import Login from "./components/Login";
 import { useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./config/firebase";
+import { Link, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Books from "./pages/Books";
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -38,32 +39,46 @@ const App = () => {
   }
   return (
     <div className="container py-4">
-      <div className="mb-4">
-        <h1 className="text-primary">Mini Book Notes</h1>
-        <p className="text-muted">Save and manage your book notes.</p>
-      </div>
+      <nav className="navbar navbar-expand mb-4">
+        <Link className="navbar-brand" to="/">
+          Mini Book Notes
+        </Link>
 
-      {user ? (
-        <div className="alert alert-success d-flex justify-content-between align-items-center">
-          <span>Logged in as: {user.email}</span>
-          <button
-            className="btn btn-outline-danger btn-sm"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
+        <div className="navbar-nav me-auto">
+          <Link className="nav-link" to="/">
+            Home
+          </Link>
+
+          <Link className="nav-link" to="/books">
+            Books
+          </Link>
         </div>
-      ) : (
-        <Login setUser={setUser} />
+
+        <div>
+          {user ? (
+            <button
+              className="btn btn-outline-danger btn-sm"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link className="btn btn-primary btn-sm" to="/login">
+              Login
+            </Link>
+          )}
+        </div>
+      </nav>
+
+      {user && (
+        <div className="alert alert-success">Logged in as: {user.email}</div>
       )}
 
-      {user ? (
-        <AddBookForm />
-      ) : (
-        <div className="alert alert-warning">Please login to add books.</div>
-      )}
-
-      <BookList />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/books" element={<Books user={user} />} />
+        <Route path="/login" element={<LoginPage setUser={setUser} />} />
+      </Routes>
     </div>
   );
 };

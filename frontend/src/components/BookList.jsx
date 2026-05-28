@@ -1,25 +1,24 @@
 import { useQuery } from "@apollo/client/react";
 import { GET_BOOKS } from "../graphql/bookQueries";
 
-const BookList = () => {
+function BookList() {
   const { loading, error, data } = useQuery(GET_BOOKS);
 
   if (loading) {
     return <div className="alert alert-info">Loading books...</div>;
   }
+
   if (error) {
-    return (
-      <div className="alert alert-danger">
-        Error loading books: {error.message}
-      </div>
-    );
+    return <div className="alert alert-danger">Error: {error.message}</div>;
   }
+
   return (
     <div className="card mb-4">
       <div className="card-body">
         <h2 className="card-title mb-3">Books</h2>
+
         {data.books.length === 0 ? (
-          <div className="alert alert-secondary">No Books found.</div>
+          <div className="alert alert-secondary">No books found.</div>
         ) : (
           <div className="row">
             {data.books.map((book) => (
@@ -30,9 +29,10 @@ const BookList = () => {
                     <h6 className="card-subtitle mb-2 text-muted">
                       by {book.author}
                     </h6>
+
+                    {book.notes && <p className="card-text">{book.notes}</p>}
                   </div>
                 </div>
-                {book.notes && <p className="card-text">{book.notes}</p>}
               </div>
             ))}
           </div>
@@ -40,6 +40,6 @@ const BookList = () => {
       </div>
     </div>
   );
-};
+}
 
 export default BookList;
