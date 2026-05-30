@@ -1,14 +1,14 @@
-import AddBookForm from "../components/AddBookForm";
+// import AddBookForm from "../components/AddBookForm";
 import BookList from "../components/BookList";
 
-const Books = ({ user }) => {
+const Books = () => {
   return (
     <div>
-      {user ? (
+      {/* {user ? (
         <AddBookForm />
       ) : (
         <div className="alert alert-warning">Please login to add books.</div>
-      )}
+      )} */}
 
       <BookList />
     </div>
