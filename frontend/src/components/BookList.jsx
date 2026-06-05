@@ -2,10 +2,19 @@ import { useQuery } from "@apollo/client/react";
 import { GET_BOOKS } from "../graphql/bookQueries";
 
 function BookList() {
+    console.log("object__1", useQuery(GET_BOOKS))
   const { loading, error, data } = useQuery(GET_BOOKS);
 
   if (loading) {
-    return <div className="alert alert-info">Loading books...</div>;
+    return (
+      <div className="card">
+        <div className="card-body text-center">
+          <div className="spinner-border text-primary" role="status">
+          </div>
+            <p className="mt-3 mb-0">Loading books...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
@@ -14,30 +23,49 @@ function BookList() {
 
   return (
     <div className="card mb-4">
-      <div className="card-body">
-        <h2 className="card-title mb-3">Books</h2>
-
-        {data.books.length === 0 ? (
-          <div className="alert alert-secondary">No books found.</div>
-        ) : (
-          <div className="row">
-            {data.books.map((book) => (
-              <div className="col-md-6 mb-3" key={book.id}>
-                <div className="card h-100">
-                  <div className="card-body">
-                    <h5 className="card-title">{book.title}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">
-                      by {book.author}
-                    </h6>
-
-                    {book.notes && <p className="card-text">{book.notes}</p>}
-                  </div>
+        <div className="card-body">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 className="card-title mb-0">
+                        Books
+                    </h2>
+                    <p className="text-muted mb-0">
+                        {data.books.length} book{data.books.length !== 1? "s" : ""} saved
+                    </p>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            </div>
+
+            {data.books.length ===0? (
+                <div className="text-center border rounded p- bg-light">
+                    <h5>No books yet</h5>
+                    <p className="text-muted mb-0">Login and add your first book note.</p>
+                </div>
+            ) : (
+                <div className="row">
+                    {data.books.map((book) => (
+                        <div className="col-md-6 col-lg-4 mb-3" key={book.id}>
+                            <div className="card h-100 shadow-sm">
+                                <div className="card-body">
+                                    <span className="badge bg-primary mb-2">Book</span>
+
+                                    <h5 className="card-title">{book.title}</h5>
+
+                                    <h6 className="card-subtitle mb-2 text-muted">
+                                        by {book.author}
+                                    </h6>
+
+                                    {book.notes ? (
+                                        <p>{book.notes}</p>
+                                    ): (
+                                        <p className="card-text text-muted">No notes added</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
     </div>
   );
 }
