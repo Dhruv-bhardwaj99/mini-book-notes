@@ -1,9 +1,21 @@
-import { useQuery } from "@apollo/client/react";
+import { useQuery, useMutation } from "@apollo/client/react";
 import { GET_BOOKS } from "../graphql/bookQueries";
+import { DELETE_BOOK } from "../graphql/bookMutation";
 
-function BookList() {
+const BookList = () => {
     console.log("object__1", useQuery(GET_BOOKS))
   const { loading, error, data } = useQuery(GET_BOOKS);
+
+  const [deleteBook] = useMutation(DELETE_BOOK, {
+    refetchQueries:[{query: GET_BOOKS}]
+  });
+
+  const handleDelete = async(id) =>{
+    await deleteBook({
+        variables:{id}
+    });
+  }
+  console.log("object__2", deleteBook)
 
   if (loading) {
     return (
@@ -59,6 +71,8 @@ function BookList() {
                                     ): (
                                         <p className="card-text text-muted">No notes added</p>
                                     )}
+
+                                    <button className="btn btn-outline-danger btn-sm"  onClick={() => handleDelete(book.id)}>Delete</button>
                                 </div>
                             </div>
                         </div>

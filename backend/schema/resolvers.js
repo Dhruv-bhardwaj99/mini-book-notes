@@ -1,5 +1,6 @@
 const { redisClient } = require("../config/redisClient");
 let books = [];
+let nextBookId = 1;
 
 const resolvers = {
   Query: {
@@ -28,7 +29,7 @@ const resolvers = {
         throw new Error("You must be logged in to add books")
       }
       const newBook = {
-        id: String(books.length + 1),
+        id: String(nextBookId++),
         title,
         author,
         notes,
@@ -39,6 +40,24 @@ const resolvers = {
       await redisClient.del("books");
       return newBook;
     },
+
+    deleteBook: async(_, {id}, context) =>{
+      if(!context.user){
+        throw new Error("You must be logged in to delete books");
+      }
+      const bookIndex = books.findIndex((book) => book.id === id);
+
+      if(bookIndex === -1){
+        throw new Error("Book not found");
+      }
+      const deletedBook = books[bookIndex];
+
+      books = books.filter((book) => book.id !== id);
+
+      await redisClient.del("books");
+
+      return deletedBook;
+    }
   },
 };
 

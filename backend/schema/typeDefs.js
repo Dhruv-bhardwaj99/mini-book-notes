@@ -12,6 +12,7 @@ books: [Book!]!
 
 type Mutation{
 addBook(title: String!, author: String!, notes: String) : Book!
+deleteBook(id: ID!): Book!
 }`;
 
 module.exports = typeDefs;
