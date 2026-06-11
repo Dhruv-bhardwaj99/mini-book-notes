@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client/react";
 import { useState } from "react";
-import { ADD_BOOK } from "../graphql/bookMutation";
+import { ADD_BOOK } from "../graphql/bookMutations";
 import { GET_BOOKS } from "../graphql/bookQueries";
 
 const AddBookForm = () => {

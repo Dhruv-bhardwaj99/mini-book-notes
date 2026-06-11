@@ -4,6 +4,7 @@ const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@as-integrations/express4");
 const { connectRedis } = require("./config/redisClient");
 const verifyFirebaseToken = require("./middleware/authMiddleware");
+const connectDB = require("./config/database");
 
 require("dotenv").config();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 async function startServer() {
+  await connectDB();
   await connectRedis();
   const server = new ApolloServer({
     typeDefs,
@@ -26,7 +28,6 @@ async function startServer() {
 
   app.use(verifyFirebaseToken);
 
-  
   app.use(
     "/graphql",
     expressMiddleware(server, {

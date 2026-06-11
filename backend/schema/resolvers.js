@@ -1,6 +1,5 @@
 const { redisClient } = require("../config/redisClient");
-let books = [];
-let nextBookId = 1;
+const Book = require("../models/Book");
 
 const resolvers = {
   Query: {
@@ -13,6 +12,8 @@ const resolvers = {
       }
 
       console.log("Books served from memory");
+
+      const books = await Book.find().sort({createdAt: -1})
 
       await redisClient.set("books", JSON.stringify(books), {
         EX: 60,
@@ -28,14 +29,11 @@ const resolvers = {
       if(!context.user){
         throw new Error("You must be logged in to add books")
       }
-      const newBook = {
-        id: String(nextBookId++),
+      const newBook = await Book.create({
         title,
         author,
         notes,
-      };
-
-      books.push(newBook);
+      });
 
       await redisClient.del("books");
       return newBook;
@@ -45,18 +43,42 @@ const resolvers = {
       if(!context.user){
         throw new Error("You must be logged in to delete books");
       }
-      const bookIndex = books.findIndex((book) => book.id === id);
+      const deletedBook = await Book.findByIdAndDelete(id);
 
-      if(bookIndex === -1){
-        throw new Error("Book not found");
+      if(!deletedBook){
+        throw new Error("Book not found")
       }
-      const deletedBook = books[bookIndex];
-
-      books = books.filter((book) => book.id !== id);
 
       await redisClient.del("books");
 
       return deletedBook;
+    },
+
+    updateBook: async(_, {id, title, author, notes}, context) => {
+      if(!context.user) {
+        throw new Error("You must be logges in to update books");
+      }
+
+      const updatedBook = await Book.findByIdAndUpdate(
+        id,
+        {
+          title,
+          author,
+          notes,
+        },
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+
+      if(!updatedBook){
+        throw new Error("Book nto found");
+      }
+
+      await redisClient.del("books");
+
+      return updatedBook;
     }
   },
 };
