@@ -9,11 +9,15 @@ const BookList = () => {
 
   const { loading, error, data } = useQuery(GET_BOOKS);
 
-  const [deleteBook] = useMutation(DELETE_BOOK, {
+  const [deleteBook, {loading: deleteLoading}] = useMutation(DELETE_BOOK, {
     refetchQueries: [{ query: GET_BOOKS }],
   });
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this book?")
+    if(!confirmDelete){
+        return;
+    }
     await deleteBook({
       variables: { id },
     });
@@ -93,7 +97,7 @@ const BookList = () => {
                           className="btn btn-outline-danger btn-sm"
                           onClick={() => handleDelete(book._id)}
                         >
-                          Delete
+                          {deleteLoading ? "Deleting..." : "Delete"}
                         </button>
                       </>
                     )}
