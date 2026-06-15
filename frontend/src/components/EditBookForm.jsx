@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client/react";
 import { useState } from "react";
 import { UPDATE_BOOK } from "../graphql/bookMutations";
 import { GET_BOOKS } from "../graphql/bookQueries";
+import { toast } from "react-toastify";
 
 const EditBookForm = ({ book, onCancel }) => {
   const [title, setTitle] = useState(book.title);
@@ -14,17 +15,23 @@ const EditBookForm = ({ book, onCancel }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      await updateBook({
+        variables: {
+          id: book._id,
+          title,
+          author,
+          notes,
+        },
+      });
 
-    await updateBook({
-      variables: {
-        id: book._id,
-        title,
-        author,
-        notes,
-      },
-    });
+      toast.success("Book updated successfully");
 
-    onCancel();
+      onCancel();
+    } catch (error) {
+      console.log("Edit Book error", error);
+      toast.error("Failed to update book");
+    }
   };
   return (
     <div className="border rounded p-3 bg-light">

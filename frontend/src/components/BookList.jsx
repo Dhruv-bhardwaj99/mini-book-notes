@@ -3,24 +3,33 @@ import { GET_BOOKS } from "../graphql/bookQueries";
 import { DELETE_BOOK } from "../graphql/bookMutations";
 import { useState } from "react";
 import EditBookForm from "./EditBookForm";
+import { toast } from "react-toastify";
 
 const BookList = () => {
   const [editingBookId, setEditingBookId] = useState(null);
 
   const { loading, error, data } = useQuery(GET_BOOKS);
 
-  const [deleteBook, {loading: deleteLoading}] = useMutation(DELETE_BOOK, {
+  const [deleteBook, { loading: deleteLoading }] = useMutation(DELETE_BOOK, {
     refetchQueries: [{ query: GET_BOOKS }],
   });
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this book?")
-    if(!confirmDelete){
-        return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this book?",
+    );
+    if (!confirmDelete) {
+      return;
     }
-    await deleteBook({
-      variables: { id },
-    });
+    try {
+      await deleteBook({
+        variables: { id },
+      });
+      toast.success("Book deleted successfully");
+    } catch (error) {
+      console.log("Error in Deleting", error);
+      toast.error("Failed to delete book");
+    }
   };
 
   if (loading) {

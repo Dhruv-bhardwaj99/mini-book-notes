@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client/react";
 import { useState } from "react";
 import { ADD_BOOK } from "../graphql/bookMutations";
 import { GET_BOOKS } from "../graphql/bookQueries";
+import { toast } from "react-toastify";
 
 const AddBookForm = () => {
   const [title, setTitle] = useState("");
@@ -13,18 +14,23 @@ const AddBookForm = () => {
   });
   const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      await addBook({
+        variables: {
+          title,
+          author,
+          notes,
+        },
+      });
 
-    await addBook({
-      variables: {
-        title,
-        author,
-        notes,
-      },
-    });
-
-    setTitle("");
-    setAuthor("");
-    setNotes("");
+      toast.success("Book added successfully");
+      setTitle("");
+      setAuthor("");
+      setNotes("");
+    } catch (error) {
+      console.error("Error in Add books", error);
+      toast.error("Failed to add Book");
+    }
   };
   return (
     <div className="card mb-4">
