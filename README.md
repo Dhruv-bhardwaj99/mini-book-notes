@@ -40,6 +40,12 @@ A full-stack book notes application built with React, GraphQL, Firebase Authenti
 - Toast notifications
 - React Router navigation
 
+## Run Full App with Docker
+
+From the root folder:
+bash
+docker compose up --build
+
 ## Project Structure
 
 ```txt

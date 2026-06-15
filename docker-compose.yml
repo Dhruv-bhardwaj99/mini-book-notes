@@ -13,5 +13,32 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  backend:
+  build:
+    context: ./backend
+  container_name: mini-book-notes-backend
+  ports:
+    - "4000:4000"
+  env_file:
+    - .env
+  volumes:
+    - ./backend:/app
+    - /app/node_modules
+  depends_on:
+    - redis
+    - mongo
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: mini-book-notes-frontend
+    ports:
+      - "5174:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
 volumes:
   mongo-data:
