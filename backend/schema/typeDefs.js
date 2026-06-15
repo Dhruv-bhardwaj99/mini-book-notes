@@ -4,6 +4,7 @@ type Book {
   title: String!
   author: String!
   notes: String
+  userId: String!
 }
 
 type Query {

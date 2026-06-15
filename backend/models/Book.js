@@ -14,8 +14,13 @@ const bookSchema = new mongoose.Schema(
         },
         notes: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
+        userId:{
+            type: String,
+            required: true,
+            index: true
+        },
     },
     {
         timestamps: true
